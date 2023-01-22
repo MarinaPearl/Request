@@ -1,9 +1,10 @@
-package ru.demchuk.request
+package ru.demchuk.request.View
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import ru.demchuk.request.R
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
