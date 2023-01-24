@@ -6,12 +6,13 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_work_with_bin.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import ru.demchuk.request.Model.RequestBin
+import kotlinx.android.synthetic.main.item_layoyt.*
 import ru.demchuk.request.R
 import ru.demchuk.request.VM.BindBinWithURL
+import ru.demchuk.request.View.adapter.ListBINAdapter
 
 class WorkWithBIN : Activity() {
 
@@ -24,13 +25,15 @@ class WorkWithBIN : Activity() {
 
     override fun onStart() {
         super.onStart()
-//        setListView("asd")
-        val observer = Observer<String>{
+        val observer = Observer<String> {
             runOnUiThread{
-                var listBank = ArrayList<String>()
-                listBank.add(it)
-                println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  ${listBank.get(0)}")
-                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listBank)
+                var gson = Gson()
+                var bank = gson?.fromJson(it, BIN::class.java)
+                var listAbout = ArrayList<BIN>()
+                if (bank != null) {
+                    listAbout.add(bank)
+                }
+                val adapter = ListBINAdapter(this, listAbout)
                 list.adapter = adapter
             }
         }
@@ -38,7 +41,6 @@ class WorkWithBIN : Activity() {
         editTextNumber.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-
                     bin = editTextNumber.text.toString()
                     editTextNumber.clearFocus()
                     editTextNumber.isCursorVisible = false
@@ -49,15 +51,4 @@ class WorkWithBIN : Activity() {
             }
         })
     }
-
-    fun setListView(text : String) {
-        var listBank = ArrayList<String>()
-        listBank.add(text)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listBank)
-        list.adapter = adapter
-    }
-
-
-
-
 }

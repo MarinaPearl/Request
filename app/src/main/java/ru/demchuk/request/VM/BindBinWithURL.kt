@@ -1,21 +1,20 @@
 package ru.demchuk.request.VM
 
 import androidx.lifecycle.MutableLiveData
-import ru.demchuk.request.Model.BIN
 import ru.demchuk.request.Model.RequestBin
 import ru.demchuk.request.View.WorkWithBIN
 
 class BindBinWithURL {
 
-    val liveData = MutableLiveData<String>("")
+    val liveData = MutableLiveData<String>()
 
 
     fun bindURL(bin : String) {
-        val req = RequestBin("45717360", this)
+        val req = RequestBin(bin, this)
         req.buildRequest()
     }
 
-    fun bindRequestWithView(aboutBank : BIN.BIN) {
-        liveData.postValue(aboutBank.toString())
+    fun bindRequestWithView(aboutBank : String) {
+        liveData.postValue(aboutBank)
     }
 }

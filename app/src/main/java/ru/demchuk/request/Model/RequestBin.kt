@@ -1,13 +1,10 @@
 package ru.demchuk.request.Model
 
-import android.util.JsonReader
+
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.codehaus.httpcache4j.uri.URIBuilder
-import org.json.JSONObject
 import ru.demchuk.request.VM.BindBinWithURL
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -33,8 +30,8 @@ class RequestBin(bin: String, val vm: BindBinWithURL) {
     }
 
     private fun getStringInOpenStream() {
+        var stringBuilder = java.lang.StringBuilder()
         try {
-            var stringBuilder = java.lang.StringBuilder()
             println(uri)
             var bufferReader = BufferedReader(InputStreamReader(uri.toURL().openStream()))
             var inputLine: String?
@@ -45,14 +42,10 @@ class RequestBin(bin: String, val vm: BindBinWithURL) {
                 inputLine = bufferReader?.readLine()
             }
             bufferReader?.close()
-            var gson = Gson()
-            var bank = gson?.fromJson(stringBuilder.toString(), BIN.BIN::class.java)
-
-            if (bank != null) {
-                vm.bindRequestWithView(bank)
-            }
         } catch (error: Exception) {
             error.printStackTrace()
+        } finally {
+            vm.bindRequestWithView(stringBuilder.toString())
         }
     }
 
