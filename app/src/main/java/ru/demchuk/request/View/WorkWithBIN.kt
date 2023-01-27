@@ -5,18 +5,17 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import androidx.lifecycle.Observer
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_work_with_bin.*
-import kotlinx.android.synthetic.main.item_layoyt.*
 import ru.demchuk.request.R
 import ru.demchuk.request.VM.BindBinWithURL
 import ru.demchuk.request.View.adapter.ListBINAdapter
 
 class WorkWithBIN : Activity() {
 
-    private var bin : String? = null
+    private var bin: String? = null
     private var bindBinWithURL = BindBinWithURL()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +25,26 @@ class WorkWithBIN : Activity() {
     override fun onStart() {
         super.onStart()
         val observer = Observer<String> {
-            runOnUiThread{
-                var gson = Gson()
-                var bank = gson?.fromJson(it, BIN::class.java)
-                var listAbout = ArrayList<BIN>()
+            runOnUiThread {
+                val gson = Gson()
+                val bank = gson.fromJson(it, BIN::class.java)
+                val listAbout = ArrayList<BIN>()
+                val list = findViewById<ListView>(R.id.list)
                 if (bank != null) {
                     listAbout.add(bank)
+                    val adapter = ListBINAdapter(this, listAbout)
+                    list.adapter = adapter
+                } else {
+                    var listNotFound = ArrayList<String>()
+                    listNotFound.add("NOT FOUND")
+                    val adapter =
+                        ArrayAdapter(this, android.R.layout.simple_list_item_1, listNotFound)
+                    list.adapter = adapter
                 }
-                val adapter = ListBINAdapter(this, listAbout)
-                list.adapter = adapter
             }
         }
         bindBinWithURL.liveData.observeForever(observer)
+        var editTextNumber = findViewById<EditText>(R.id.editTextNumber)
         editTextNumber.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {

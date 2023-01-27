@@ -16,4 +16,9 @@ class ChoosingAction : Activity() {
         val intent = Intent(this, WorkWithBIN::class.java)
         startActivity(intent)
     }
+
+    fun onClickHistory(view: View) {
+        val intent = Intent(this, ListBIN::class.java)
+        startActivity(intent)
+    }
 }
