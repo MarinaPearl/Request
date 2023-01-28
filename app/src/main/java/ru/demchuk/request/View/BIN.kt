@@ -11,7 +11,7 @@ data class BIN(
 )
 
 data class Number(
-    var length: Int,
+    var length: Double,
     var luhn: Boolean
 )
 
@@ -21,8 +21,8 @@ data class Country(
     var name: String,
     var emoji: String,
     var currency: String,
-    var latitude: Int,
-    var longitude: Int
+    var latitude: Double,
+    var longitude: Double
 )
 
 data class Bank(

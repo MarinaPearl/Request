@@ -1,16 +1,15 @@
 package ru.demchuk.request.VM
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import ru.demchuk.request.Model.RequestBin
-import ru.demchuk.request.View.WorkWithBIN
 
 class BindBinWithURL {
 
     val liveData = MutableLiveData<String>()
 
-
-    fun bindURL(bin : String) {
-        val req = RequestBin(bin, this)
+    fun bindURL(bin : String, context: Context) {
+        val req = RequestBin(bin, this, context)
         req.buildRequest()
     }
 

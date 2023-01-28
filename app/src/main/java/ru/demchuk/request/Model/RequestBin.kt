@@ -1,7 +1,7 @@
 package ru.demchuk.request.Model
 
 
-import com.google.gson.Gson
+import android.content.Context
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.codehaus.httpcache4j.uri.URIBuilder
@@ -11,15 +11,22 @@ import java.io.InputStreamReader
 import java.net.URI
 
 
-class RequestBin(bin: String, val vm: BindBinWithURL) {
+class RequestBin(bin: String, val vm: BindBinWithURL, context : Context) {
     private var bin: String
     private lateinit var uri: URI
     private val URL_START = "https://lookup.binlist.net/"
+    private var dbManager = DbBinManager(context)
 
     init {
         this.bin = bin
+        workWithDbInsert()
     }
 
+    private fun workWithDbInsert() {
+        dbManager.openDb()
+        dbManager.insertToDb(bin)
+        dbManager.closeDb()
+    }
     fun buildRequest() {
         val urlFinite = URL_START + bin
         val urlBuilder = URIBuilder.fromString(urlFinite)
@@ -30,18 +37,17 @@ class RequestBin(bin: String, val vm: BindBinWithURL) {
     }
 
     private fun getStringInOpenStream() {
-        var stringBuilder = java.lang.StringBuilder()
+        val stringBuilder = java.lang.StringBuilder()
         try {
             println(uri)
-            var bufferReader = BufferedReader(InputStreamReader(uri.toURL().openStream()))
+            val bufferReader = BufferedReader(InputStreamReader(uri.toURL().openStream()))
             var inputLine: String?
-            inputLine = bufferReader?.readLine()
+            inputLine = bufferReader.readLine()
             while (inputLine?.isNotEmpty() == true) {
                 stringBuilder.append(inputLine)
-                println(inputLine)
-                inputLine = bufferReader?.readLine()
+                inputLine = bufferReader.readLine()
             }
-            bufferReader?.close()
+            bufferReader.close()
         } catch (error: Exception) {
             error.printStackTrace()
         } finally {
